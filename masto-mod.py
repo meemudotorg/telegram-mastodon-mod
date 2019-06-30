@@ -1,24 +1,16 @@
 #!/usr/bin/env python
 # Python mastodon telegram bot for automoderating
-
 import logging
-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from mastodon import Mastodon, StreamListener
+from listeners.public import PublicStreamListener
+import yaml
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-class AutomodStreamListener(StreamListener): 
-    def on_update(self,status):
-        self.bot.send_message(17631065, 'New message?')
-        print(status)
-
-    def __init__(self, bot):
-        self.bot = bot
 
 def start(update,context):
     """reply to start"""
@@ -32,15 +24,26 @@ def error(update,context):
     """Log errors"""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
+def setup():
+    print("Enter your mastodon login name")
+    print("Enter your mastodon password")
+    print("Creating app on your server....")
+    print("Ok thnx, saved credentials!")
+
 def main():
+    #open the settings file
+    with open("settings.yml") as settings:
+        config = yaml.safe_load(settings)
+
+    #start masotdon.py client
     mastodon = Mastodon(
         client_id = 'pytooter_clientcred.secret',
         access_token = 'pytooter_usercred.secret',
-        api_base_url = 'https://meemu.org'
+        api_base_url =  config['server']['url']
     )
-  
-    """Start bot."""
-    updater = Updater("644394284:AAG_J2PQ13ATLjIVqsqoN8u1Ei3jxkNhun4", use_context=True)
+
+   # start the telegram bot.
+    updater = Updater(config['telegram_api_key'], use_context=True)
     dp = updater.dispatcher
 
     #add handlers for commands
@@ -54,9 +57,12 @@ def main():
     
     
     updater.start_polling()
-    listener = AutomodStreamListener(
-        bot = updater.bot
+
+    listener = PublicStreamListener(
+        bot = updater.bot,
+        chat_id = config['chat_id']
     )
+
     mastodon.stream_public(listener)
     updater.idle()
    
