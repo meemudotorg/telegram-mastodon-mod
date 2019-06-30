@@ -1,0 +1,18 @@
+
+venv https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/ 
+
+masto py api https://mastodonpy.readthedocs.io/en/stable/
+
+python-telegram-bot pkg
+
+1) callback listener for the fedi tl to (batch?) and screen incoming toots
+for banned words/urls/phrases 
+also severity? auto silence/delete statuses that say particular phrases?
+report others
+2) fetch reports every 5 minutes, send a telegram msg with new reports
+3) fetch instance list every hour, store instances, diff.
+
+join a channel
+only respond to allowed users
+only respond in the channel
+only post in the channel
