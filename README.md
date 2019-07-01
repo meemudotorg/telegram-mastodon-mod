@@ -16,12 +16,12 @@ tangentially inspired by the existence of reddit's automoderator which improved 
 
 you have to create your own telegram bot and store your api key in the settings file
 
-you need to fetch the id of the chat you want to interact with, and add that too.
+you need to fetch the id of the chat you want to interact with, and add that too. see: https://stackoverflow.com/questions/32423837/telegram-bot-how-to-get-a-group-chat-id
 
 also, create a mastodon account and give it mod rights. I don't recommend making it an admin or using your own account, because I can't guarantee this is particularly good or secure.
 
 
-then start up the virtual environment and run python masto-mod.py --init and follow the prompts.
+then start up the virtual environment and (NOTE: not working yet) run python masto-mod.py --init and follow the prompts.
 it will make two files `pytooter_clientcred.secret` and `pytooter_usercred.secret` for god's sake DO NOT SHARE THESE 
 
 after that, you can run it with python masto-mod.py and let it sit there and do its thing
@@ -32,6 +32,12 @@ you could probably run this on heroku or something pretty easily.
 
 this script is pretty much written for me, but i'm putting it out here in case anyone else finds it useful
 i can't promise timely fixes to bugs or support, but people are welcome to fork/make pull requests/do what they will with it.
+
+# limitations
+
+this only sees what's in the fedi TL currently
+it can only moderate one instance
+it can only post to one chat
 
 # future
 

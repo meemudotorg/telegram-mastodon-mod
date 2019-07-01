@@ -2,3 +2,4 @@ env
 *.secret
 .vscode
 settings.yml
+*/__pycache__/

@@ -1,0 +1,14 @@
+server:
+  #base server url to run the automod on
+  url: 'https://YOURSERVER'
+  # what you'll call your app on your server
+  app_name: 'YOURAPP'
+# your API key for telegram
+telegram_api_key: 'TELEGRAM API KEY'
+# chat id of the chat -- get from @userinfobot
+chat_id: YOURCHATID
+# rule settings
+rules:
+  screened_text:
+    - "womenarestupid"
+    

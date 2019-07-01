@@ -4,7 +4,9 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from mastodon import Mastodon, StreamListener
 from listeners.public import PublicStreamListener
+from rules.status import StatusRules
 import yaml
+
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -14,11 +16,7 @@ logger = logging.getLogger(__name__)
 
 def start(update,context):
     """reply to start"""
-    update.message.reply_text('Help!')
-
-def echo(update, context):
-    """Echo msg"""
-    update.message.reply_text(update.message.text)
+    update.message.reply_text('ok!')
 
 def error(update,context):
     """Log errors"""
@@ -48,19 +46,18 @@ def main():
 
     #add handlers for commands
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("help", help))
-
-    #echo non-commands
-    dp.add_handler(MessageHandler(Filters.text, echo))
 
     dp.add_error_handler(error)
     
     
     updater.start_polling()
 
+    rules = StatusRules(config['rules'])
+
     listener = PublicStreamListener(
         bot = updater.bot,
-        chat_id = config['chat_id']
+        chat_id = config['chat_id'],
+        rules =  rules
     )
 
     mastodon.stream_public(listener)
