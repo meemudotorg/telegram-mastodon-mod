@@ -10,8 +10,9 @@ class StatusRules:
 
     def has_screened_text(self, status):
         """Does a given status contain phrase from the screened list?"""
-        print(status)
-        print(any(word in status for word in self.screened_text))
-        return any(word in status for word in self.screened_text)
+        rule_break = list(filter(lambda word: word in self.screened_text, status.split()))
+        if(len(rule_break) > 0):
+            return rule_break[0]
+        return False
         
     

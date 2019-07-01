@@ -4,10 +4,10 @@ from rules.status import StatusRules
 class PublicStreamListener(StreamListener): 
     def on_update(self,status):
         """Processes incoming statuses on the fedi TL"""
-        if self.rules.has_screened_text(status.content):
-            self.bot.send_message(self.chat_id, f'Message contains {status.content}')
-        self.bot.send_message(self.chat_id, 'New message?')
-        #print(status)
+        screened = self.rules.has_screened_text(status.content)
+        if screened is not False:
+            self.bot.send_message(self.chat_id, f'{status.url} contains a banned {screened}')
+       # self.bot.send_message(self.chat_id, 'New message?')
 
     def __init__(self, bot, chat_id, rules):
         """Define the telegram bot and the telegram chat id to act on."""

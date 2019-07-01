@@ -21,7 +21,7 @@ you need to fetch the id of the chat you want to interact with, and add that too
 also, create a mastodon account and give it mod rights. I don't recommend making it an admin or using your own account, because I can't guarantee this is particularly good or secure.
 
 
-then start up the virtual environment and (NOTE: not working yet) run python masto-mod.py --init and follow the prompts.
+then create and start up the virtual environment and (NOTE: not working yet) run python masto-mod.py --init and follow the prompts.
 it will make two files `pytooter_clientcred.secret` and `pytooter_usercred.secret` for god's sake DO NOT SHARE THESE 
 
 after that, you can run it with python masto-mod.py and let it sit there and do its thing

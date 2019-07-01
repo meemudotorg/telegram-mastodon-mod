@@ -11,4 +11,6 @@ chat_id: YOURCHATID
 rules:
   screened_text:
     - "womenarestupid"
+    - "http://womenarestupid.site"
+    - "womenarestupid.site"
     
