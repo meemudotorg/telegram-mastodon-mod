@@ -4,10 +4,6 @@ class StatusRules:
         if ruleConfig is None:
             raise Exception("You must provide screened_text in settings")
         self.screened_text = ruleConfig['screened_text']
-        
-        for rule in ruleConfig['screened_text']:
-            print(rule)
-
     def has_screened_text(self, status):
         """Does a given status contain phrase from the screened list?"""
         rule_break = list(filter(lambda word: word in self.screened_text, status.split()))

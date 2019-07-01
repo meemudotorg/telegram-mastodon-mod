@@ -22,13 +22,32 @@ def error(update,context):
     """Log errors"""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
-def setup():
-    print("Enter your mastodon login name")
+def setup(config):
+    """One time setup for the bot -- creates the api key and secrets you'll need to hit yr server."""
+    print("Enter your bot's mastodon login name")
+    username = input()
     print("Enter your mastodon password")
+    password = input()
     print("Creating app on your server....")
+    Mastodon.create_app(
+        config['server']['app_name'],
+        api_base_url = config['server']['url'],
+        to_file = 'pytooter_clientcred.secret'
+    )
+    print("app created, logging in...")
+    mastodon = Mastodon(
+        client_id = 'pytooter_clientcred.secret',
+        api_base_url = config['server']['url']
+    )
+    mastodon.log_in(
+        username,
+        password,
+        to_file = 'pytooter_usercred.secret'
+    )
     print("Ok thnx, saved credentials!")
 
 def main():
+    
     #open the settings file
     with open("settings.yml") as settings:
         config = yaml.safe_load(settings)
