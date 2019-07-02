@@ -23,7 +23,7 @@ def error(update,context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 def setup(config):
-    """One time setup for the bot -- creates the api key and secrets you'll need to hit yr server."""
+    """One time setup for the bot -- creates the api key and secrets you'll need to hit yr"""
     print("Enter your bot's mastodon login name")
     username = input()
     print("Enter your mastodon password")
@@ -47,7 +47,6 @@ def setup(config):
     print("Ok thnx, saved credentials!")
 
 def main():
-    
     #open the settings file
     with open("settings.yml") as settings:
         config = yaml.safe_load(settings)

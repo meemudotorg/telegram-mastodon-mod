@@ -3,3 +3,4 @@ env
 .vscode
 settings.yml
 */__pycache__/
+__pycache__/

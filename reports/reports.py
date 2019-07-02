@@ -7,5 +7,6 @@ class ReportsWatcher():
         self.config = config
         self.telegram = telegram
         s = sched.scheduler()
+        
     def check_report_queue(self):
         pass

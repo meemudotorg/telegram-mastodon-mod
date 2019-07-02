@@ -9,8 +9,8 @@ telegram_api_key: 'TELEGRAM API KEY'
 chat_id: YOURCHATID
 # rule settings
 rules:
-  screened_text:
-    - "womenarestupid"
-    - "http://womenarestupid.site"
-    - "womenarestupid.site"
+  - name: "filtered words"
+    regex: "womenarestupid|anime"
+  - name: "filtered sites"
+    regex: "womenarestupid.site"
     

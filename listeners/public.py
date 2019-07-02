@@ -6,7 +6,7 @@ class PublicStreamListener(StreamListener):
         """Processes incoming statuses on the fedi TL"""
         screened = self.rules.has_screened_text(status.content)
         if screened is not False:
-            self.bot.send_message(self.chat_id, f'{status.url} contains a banned {screened}')
+            self.bot.send_message(self.chat_id, f'{status.url} breaks rule: {screened}')
        # self.bot.send_message(self.chat_id, 'New message?')
 
     def __init__(self, bot, chat_id, rules):
