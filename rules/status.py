@@ -11,10 +11,8 @@ class StatusRules:
         """Does a given status match a pattern from the rules list?"""
         for rule in self.rule_config:
             pattern = rule['regex']
-            print(pattern)
             result = re.search(pattern, status)
             if result:
-                print(result)
                 return rule['name']
         return False
         
