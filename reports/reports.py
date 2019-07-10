@@ -9,7 +9,9 @@ class Reports():
         self.config = config
         self.bot = bot
         self.chat_id = chat_id
+        self.seen_reports = set()
 
+    
     def check_report_queue(self):
         reports = self.mastodon.admin_reports()
         print(reports)
@@ -17,6 +19,7 @@ class Reports():
         
     def start_monitoring(self):
          schedule.every().minute.do(self.check_report_queue)
+         
          while True:
             schedule.run_pending()
             time.sleep(1)
