@@ -13,13 +13,17 @@ class Reports():
 
     
     def check_report_queue(self):
+        """Checks report queue and sends a message using a bot"""
         reports = self.mastodon.admin_reports()
         print(reports)
-        self.bot.send_message(self.chat_id, f'{len(reports)} in the report queue!')
+        if len(reports) > 0:
+            self.bot.send_message(self.chat_id, f'{len(reports)} in the report queue!')
+        else:
+            print("no reports found")
         
     def start_monitoring(self):
-         schedule.every().minute.do(self.check_report_queue)
-         
-         while True:
+        """Begin monitoring report queue"""
+        schedule.every(30).minutes.do(self.check_report_queue)
+        while True:
             schedule.run_pending()
             time.sleep(1)
