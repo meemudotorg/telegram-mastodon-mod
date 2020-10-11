@@ -4,6 +4,7 @@ import logging
 import yaml
 import argparse
 import getpass
+from concurrent.futures import ThreadPoolExecutor
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from mastodon import Mastodon, StreamListener
 from listeners.public import PublicStreamListener
@@ -96,9 +97,10 @@ def main():
         chat_id = config['chat_id']
     )
 
-    reports.start_monitoring()
-
-    mastodon.stream_public(listener)
+    #start the listening features on different threads
+    with ThreadPoolExecutor(max_workers=2) as e:
+        e.submit(reports.start_monitoring)
+        e.submit(mastodon.stream_public, listener)
     
     updater.idle()
    
