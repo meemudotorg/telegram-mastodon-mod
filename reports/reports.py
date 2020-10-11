@@ -15,7 +15,6 @@ class Reports():
     def check_report_queue(self):
         """Checks report queue and sends a message using a bot"""
         reports:dict = self.mastodon.admin_reports()
-        print(reports)
         checked_ids = [id['id'] for id in reports]
         new_ids = set(checked_ids).difference(self.seen_reports)
         if len(new_ids) > 0:
