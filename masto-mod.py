@@ -10,6 +10,7 @@ from mastodon import Mastodon, StreamListener
 from listeners.public import PublicStreamListener
 from rules.status import StatusRules
 from reports.reports import Reports
+from moderation.instances import Instances
 
 
 
@@ -48,14 +49,20 @@ def setup(config):
         to_file = 'pytooter_usercred.secret',
         scopes=['admin:read','read']
     )
+    setup_db(mastodon,config)
     print("Ok thnx, saved credentials!")
 
+def setup_db(mastodon:Mastodon, config):
+    instances = Instances(mastodon, config, None, None)
+    instances.init_sqllite_db()
+    print("done...!")
 
 def main():
     """Kickoff the bot and run"""
     #parse args
     parser = argparse.ArgumentParser(description="Telegram mastodon mod bot")
     parser.add_argument("--setup", help="Initial setup of the bot, creates the app on the instance and a login token", action="store_true")
+    parser.add_argument("--setup_db", help="Reinitialize, or initial set up of, instances database", action="store_true")
     args = parser.parse_args()
    
     #open the settings file
@@ -72,7 +79,9 @@ def main():
         access_token = 'pytooter_usercred.secret',
         api_base_url =  config['server']['url']
     )
-
+    if args.setup_db:
+        setup_db(Mastodon, config)
+        exit()
    # start the telegram bot.
     updater = Updater(config['telegram_api_key'], use_context=True)
     dp = updater.dispatcher
@@ -96,11 +105,19 @@ def main():
         bot = updater.bot,
         chat_id = config['chat_id']
     )
-
+    instances = Instances(
+        mastodon = mastodon,
+        config = config,
+        bot = updater.bot,
+        chat_id = config['chat_id']
+    )
+    updater.bot.send_message(config['chat_id'], "HI! I'm online!")
     #start the listening features on different threads
-    with ThreadPoolExecutor(max_workers=2) as e:
+    with ThreadPoolExecutor(max_workers=3) as e:
         e.submit(reports.start_monitoring)
+        e.submit(instances.start_monitoring)
         e.submit(mastodon.stream_public, listener)
+       
     
     updater.idle()
    
