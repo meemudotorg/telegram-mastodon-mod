@@ -52,7 +52,7 @@ def setup(config):
     setup_db(mastodon,config)
     print("Ok thnx, saved credentials!")
 
-def setup_db(mastodon:Mastodon, config):
+def setup_db(mastodon: Mastodon, config):
     instances = Instances(mastodon, config, None, None)
     instances.init_sqllite_db()
     print("done...!")
@@ -82,6 +82,7 @@ def main():
     if args.setup_db:
         setup_db(Mastodon, config)
         exit()
+    
    # start the telegram bot.
     updater = Updater(config['telegram_api_key'], use_context=True)
     dp = updater.dispatcher

@@ -15,18 +15,18 @@ class Reports():
     def check_report_queue(self):
         """Checks report queue and sends a message using a bot"""
         try:
-        	reports:dict = self.mastodon.admin_reports()
-        	checked_ids = [id['id'] for id in reports]
-        	new_ids = set(checked_ids).difference(self.seen_reports)
-        	if len(new_ids) > 0:
-            	self.bot.send_message(self.chat_id, f'{len(reports)} in the report queue!')
-        	else:
-            	print("no reports found")
-        	self.seen_reports = self.seen_reports.union(new_ids)
-		except Exception as e:
-			print(e)
-		finally:
-			pass
+            reports:dict = self.mastodon.admin_reports()
+            checked_ids = [id['id'] for id in reports]
+            new_ids = set(checked_ids).difference(self.seen_reports)
+            if len(new_ids) > 0:
+                self.bot.send_message(self.chat_id, f'{len(reports)} in the report queue!')
+            else:
+                print("no reports found")
+            self.seen_reports = self.seen_reports.union(new_ids)
+        except Exception as e:
+            print(e)
+        finally:
+            pass
         
     def start_monitoring(self):
         """Begin monitoring report queue"""
