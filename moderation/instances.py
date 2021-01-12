@@ -43,6 +43,7 @@ class Instances():
             if len(diff) > 0:
                 msg = " ".join(diff)
                 print("found new instances..")
+                self.__insert_new_instances(instance_list)
                 self.bot.send_message(self.chat_id, f'NEW INSTANCES FOUND: {msg}')
             else:
                 print("no new instances found")
