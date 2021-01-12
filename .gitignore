@@ -5,3 +5,4 @@ settings.yml
 */__pycache__/
 __pycache__/
 *.db
+*.env
