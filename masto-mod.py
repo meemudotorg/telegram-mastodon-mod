@@ -99,10 +99,10 @@ def main():
 
     #configure rules.
     rules = StatusRules(config['rules'])
-
+    chat_id = config['chat_id']
     listener = PublicStreamListener(
         bot = updater.bot,
-        chat_id = config['chat_id'],
+        chat_id = chat_id,
         rules =  rules
     )
 
@@ -110,19 +110,21 @@ def main():
         mastodon = mastodon,
         config = config['reports'],
         bot = updater.bot,
-        chat_id = config['chat_id']
+        chat_id = chat_id
     )
     instances = Instances(
         mastodon = mastodon,
         config = config,
         bot = updater.bot,
-        chat_id = config['chat_id']
+        chat_id = chat_id
     )
-    signal.signal(signal.SIGHUP, goodbye(updater.bot, config['chat_id']))
-    signal.signal(signal.SIGTERM, goodbye(updater.bot, config['chat_id']))
+    signal.signal(signal.SIGHUP, goodbye(updater.bot, chat_id))
+    signal.signal(signal.SIGTERM, goodbye(updater.bot, chat_id))
 
-    updater.bot.send_message(config['chat_id'], "HI! I'm online!")
+    updater.bot.send_message(chat_id, "HI! I'm online!")
+    
     #start the listening features on different threads
+
     with ThreadPoolExecutor(max_workers=3) as e:
         e.submit(reports.start_monitoring)
         e.submit(instances.start_monitoring)
