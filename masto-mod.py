@@ -59,7 +59,7 @@ def setup_db(mastodon: Mastodon, config):
     print("done...!")
 
 def goodbye(bot, chat_id):
-    bot.send_message(config['chat_id'], "SIGHUP/SIGTERM... Goodbye!")
+    bot.send_message(chat_id, "SIGHUP/SIGTERM... Goodbye!")
 
 
 
@@ -122,7 +122,7 @@ def main():
     signal.signal(signal.SIGTERM, goodbye(updater.bot, chat_id))
 
     updater.bot.send_message(chat_id, "HI! I'm online!")
-    
+
     #start the listening features on different threads
 
     with ThreadPoolExecutor(max_workers=3) as e:
