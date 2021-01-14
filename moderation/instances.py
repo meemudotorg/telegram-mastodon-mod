@@ -11,7 +11,6 @@ class Instances():
         self.config = config
         self.bot = bot
         self.chat_id = chat_id
-        self.connection = sqlite3.connect("instances.db")
        
         pass
     def list_blocked_instances(self):
@@ -22,11 +21,13 @@ class Instances():
         instances = self.mastodon.instance_peers()
         return instances
     def init_sqllite_db(self):
-        cursor = self.connection.cursor()
+        connection = sqlite3.connect("instances.db")
+        cursor = connection.cursor()
         cursor.execute("CREATE TABLE instance (instanceUrl TEXT)")
+        connection.close()
 
     def instance_digest(self):
-        self.connection = sqlite3.connect("instances.db")
+        connection = sqlite3.connect("instances.db")
         try:
             print("Searching for new instances...")
             rows = set(self.__fetch_from_db())
@@ -50,7 +51,7 @@ class Instances():
         except sqlite3.ProgrammingError as e:
             print(e)
         finally:
-            self.connection.close()
+            connection.close()
             print("done")
        
     
@@ -62,15 +63,19 @@ class Instances():
             time.sleep(1)
         
     def __fetch_from_db(self):
-        cursor = self.connection.cursor()
+        connection = sqlite3.connect("instances.db")
+        cursor =connection.cursor()
         rows = cursor.execute("SELECT instanceUrl FROM instance").fetchall()
         cursor.close()
+        connection.close()
         return rows
 
     def  __insert_new_instances(self, urls):
-        cursor = self.connection.cursor()
+        connection = sqlite3.connect("instances.db")
+        cursor = connection.cursor()
         statement = "INSERT INTO instance (instanceUrl) VALUES (?);"
         for item in urls:
             cursor.execute(statement,(item,))
-        self.connection.commit()
+        connection.commit()
         cursor.close()
+        connection.cose()
