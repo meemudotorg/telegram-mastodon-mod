@@ -4,6 +4,7 @@ import logging
 import yaml
 import argparse
 import getpass
+import signal
 from concurrent.futures import ThreadPoolExecutor
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from mastodon import Mastodon, StreamListener
@@ -56,6 +57,11 @@ def setup_db(mastodon: Mastodon, config):
     instances = Instances(mastodon, config, None, None)
     instances.init_sqllite_db()
     print("done...!")
+
+def goodbye(bot, chat_id):
+    bot.send_message(config['chat_id'], "SIGHUP/SIGTERM... Goodbye!")
+
+
 
 def main():
     """Kickoff the bot and run"""
@@ -112,6 +118,9 @@ def main():
         bot = updater.bot,
         chat_id = config['chat_id']
     )
+    signal.signal(signal.SIGHUP, goodbye(bot, config['chat_id']))
+    signal.signal(signal.SIGTERM, goodbye(bot, config['chat_id']))
+    
     updater.bot.send_message(config['chat_id'], "HI! I'm online!")
     #start the listening features on different threads
     with ThreadPoolExecutor(max_workers=3) as e:
