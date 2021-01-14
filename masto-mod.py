@@ -118,9 +118,10 @@ def main():
         bot = updater.bot,
         chat_id = chat_id
     )
-    signal.signal(signal.SIGHUP, goodbye(updater.bot, chat_id))
-    signal.signal(signal.SIGTERM, goodbye(updater.bot, chat_id))
-
+    caller = goodbye(updater.bot,chat_id)
+    signal.signal(signal.SIGHUP, caller)
+    signal.signal(signal.SIGTERM, caller)
+   
     updater.bot.send_message(chat_id, "HI! I'm online!")
 
     #start the listening features on different threads
