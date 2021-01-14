@@ -118,9 +118,9 @@ def main():
         bot = updater.bot,
         chat_id = config['chat_id']
     )
-    signal.signal(signal.SIGHUP, goodbye(bot, config['chat_id']))
-    signal.signal(signal.SIGTERM, goodbye(bot, config['chat_id']))
-    
+    signal.signal(signal.SIGHUP, goodbye(updater.bot, config['chat_id']))
+    signal.signal(signal.SIGTERM, goodbye(updater.bot, config['chat_id']))
+
     updater.bot.send_message(config['chat_id'], "HI! I'm online!")
     #start the listening features on different threads
     with ThreadPoolExecutor(max_workers=3) as e:
