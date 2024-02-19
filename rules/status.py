@@ -14,5 +14,4 @@ class StatusRules:
             result = re.search(pattern, status)
             if result:
                 return rule['name']
-        return False
-        
+        return False      

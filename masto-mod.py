@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Python mastodon telegram bot for automoderating
 import logging
+import sys
 import yaml
 import argparse
 import getpass
@@ -11,6 +12,7 @@ from listeners.public import PublicStreamListener
 from rules.status import StatusRules
 from reports.reports import Reports
 from moderation.instances import Instances
+
 
 
 
@@ -25,7 +27,11 @@ def error(update,context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 def setup(config):
-    """One time setup for the bot -- creates the api key and secrets you'll need to hit yr instance"""
+    """
+    One time setup for the bot -- creates the api key and secrets you'll need to hit yr instance
+    This will create a token with the permissions listed in scopes:
+    ['admin:read', 'read', 'admin:write:domain_blocks','admin:write:reports']
+    """
     print("Enter your bot's mastodon login:")
     username = input()
     print("Enter your bot's mastodon password")
@@ -35,7 +41,7 @@ def setup(config):
         config['server']['app_name'],
         api_base_url = config['server']['url'],
         to_file = 'pytooter_clientcred.secret',
-        scopes= ['admin:read', 'read']
+        scopes= ['admin:read', 'read', 'admin:write:domain_blocks','admin:write:reports']
 
     )
     print("app created, logging in...")
@@ -53,11 +59,13 @@ def setup(config):
     print("Ok thnx, saved credentials!")
 
 def setup_db(mastodon: Mastodon, config):
+    """Initialize the database that hosts instance information."""
     instances = Instances(mastodon, config, None, None)
     instances.init_sqllite_db()
     print("done...!")
 
 def goodbye(bot, chat_id):
+    """Termination tasks..."""
     bot.send_message(chat_id, "SIGHUP/SIGTERM... Goodbye!")
 
 
@@ -71,12 +79,12 @@ def main():
     args = parser.parse_args()
    
     #open the settings file
-    with open("settings.yml") as settings:
+    with open("settings.yml", 'rt') as settings:
         config = yaml.safe_load(settings)
     
     if args.setup:
         setup(config)
-        exit()
+        sys.exit()
     
     #start masotdon.py client
     mastodon = Mastodon(
@@ -86,14 +94,13 @@ def main():
     )
     if args.setup_db:
         setup_db(Mastodon, config)
-        exit()
-    
+        sys.exit()   
    # start the telegram bot.
     updater = Updater(config['telegram_api_key'], use_context=True)
-    dp = updater.dispatcher
+    dispatcher = updater.dispatcher
 
-    dp.add_error_handler(error)
-    
+    dispatcher.add_error_handler(error)
+ 
     updater.start_polling()
 
     #configure rules.
@@ -125,12 +132,10 @@ def main():
         e.submit(reports.start_monitoring)
         e.submit(instances.start_monitoring)
         e.submit(mastodon.stream_public, listener)
-       
-    
+
     updater.idle()
-   
+
 
 if __name__ == '__main__':
     main()
-
 

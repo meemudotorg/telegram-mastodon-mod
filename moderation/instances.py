@@ -11,22 +11,26 @@ class Instances():
         self.config = config
         self.bot = bot
         self.chat_id = chat_id
-       
-        pass
-    def list_blocked_instances(self):
-        pass
+
     def block_instance(self):
-        pass
+        """Blocks a domain using admin API"""
+        return
+
     def fetch_instances(self):
+        """fetches list of peers."""
         instances = self.mastodon.instance_peers()
         return instances
+        
     def init_sqllite_db(self):
+        """Initializes the sqllite database that holds instance info"""
+        #TODO: Make this more generic so it works with something other than sqlite?
         connection = sqlite3.connect("instances.db")
         cursor = connection.cursor()
         cursor.execute("CREATE TABLE instance (instanceUrl TEXT)")
         connection.close()
 
     def instance_digest(self):
+        """Generates a digest message of newly seen instances."""
         connection = sqlite3.connect("instances.db")
         try:
             print("Searching for new instances...")
@@ -48,15 +52,16 @@ class Instances():
                 self.bot.send_message(self.chat_id, f'NEW INSTANCES FOUND: {msg}')
             else:
                 print("no new instances found")
-        except sqlite3.ProgrammingError as e:
-            print(e)
+        except sqlite3.ProgrammingError as sql_error:
+            print(sql_error)
         finally:
             connection.close()
             print("done")
        
     
     def start_monitoring(self):
-   
+        """Runs monitoring on schedule"""
+        #TODO: Make configurable.
         schedule.every(1).minutes.do(self.instance_digest)
         while True:
             schedule.run_pending()

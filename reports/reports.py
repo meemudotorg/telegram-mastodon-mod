@@ -23,13 +23,15 @@ class Reports():
             else:
                 print("no reports found")
             self.seen_reports = self.seen_reports.union(new_ids)
-        except Exception as e:
-            print(e)
+        #TODO: Should this be more ganular?
+        except Exception as exception:
+            print(exception)
         finally:
             pass
         
     def start_monitoring(self):
         """Begin monitoring report queue"""
+        #TODO: Make interval configurable
         schedule.every(1).minutes.do(self.check_report_queue)
         while True:
             schedule.run_pending()
